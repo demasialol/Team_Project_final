@@ -32,19 +32,16 @@ public class imgList extends AppCompatActivity {
     String user;
     String image;
     Bitmap bitmap;
-    String Name; //받는 사람
-    String fullName; //로그인한 사람
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_img_list);
 
-        ListView listView = findViewById(R.id.listView);
+        ListView listView = findViewById(R.id.listView); //받은 사진 목록을 보여주는 용도로 listView를 선언해줍니다.
         ImageView imgMsg = findViewById(R.id.imgMsg);
 
-        ArrayList<String> items = new ArrayList<>();
-        MainActivity main = new MainActivity();
+        ArrayList<String> items = new ArrayList<>(); //사진을 보낸 사람의 이름을 저장할 items라는 ArrayList를 만들어줍니다.
 
         adapter = new CustomAdapter(this, 0, items);
 
@@ -52,13 +49,16 @@ public class imgList extends AppCompatActivity {
         DatabaseReference reference = fDatabase.getReference();
 
         reference.child("users/abc").addValueEventListener(new ValueEventListener() {
+            //지정된 경로에 이미지가 저장되면 이벤트리스너가 실행됩니다.
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     if (dataSnapshot.getKey().equals("fullName")){
+                        //로그인한 사용자의 이름을 뽑아 user 변수에 저장 후, items에 추가해줍니다.
                         user = dataSnapshot.getValue().toString();
                         items.add(user);
                         Log.d("TAG","items: "+user);
+                        //listView에 adapter를 연결해줍니다.
                         listView.setAdapter(adapter);
                     }
                 }
@@ -67,13 +67,12 @@ public class imgList extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) { }
         });
 
+        //listView를 클릭하면 일어나는 이벤트 처리입니다.
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 String data = (String)adapterView.getItemAtPosition(position);
-                //    imgMsg.setImageDrawable(null);
                 Log.d("TAG","text: "+data);
-
                 setContentView(R.layout.image);
 
                 TextView txtNameGet = findViewById(R.id.txtNameGet);
@@ -84,13 +83,14 @@ public class imgList extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                             if (dataSnapshot.getKey().equals("image")){
+                                //스트링 값으로 저장된 이미지를 가져와 image변수에 저장합니다.
                                 image = dataSnapshot.getValue().toString();
 
                                 byte[] b = Base64.decode(image, Base64.DEFAULT);
 
                                 bitmap = BitmapFactory.decodeByteArray(b, 0, b.length);
                                 Log.d("TAG","bitmap: "+bitmap);
-
+                                //image변수에 저장된 스트링 값을 바이트 배열로 바꾸고 비트맵으로 변환하여 이미지뷰에 띄워줍니다.
                                 imgGet.setImageBitmap(bitmap);
                             }
                         }
@@ -98,7 +98,7 @@ public class imgList extends AppCompatActivity {
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) { }
                 });
-
+                //받는 사람이름을 텍스트뷰에 띄워줍니다.
                 txtNameGet.setText(user);
             }
         });
@@ -127,24 +127,5 @@ public class imgList extends AppCompatActivity {
 
             return v;
         }
-    }
-
-    public static byte[] binaryStringToByteArray(String s) {
-        int count = s.length() / 8;
-        byte[] b = new byte[count];
-        for (int i = 1; i < count; ++i) {
-            String t = s.substring((i - 1) * 8, i * 8);
-            b[i - 1] = binaryStringToByte(t);
-        }
-        return b;
-    }
-
-    public static byte binaryStringToByte(String s) {
-        byte ret = 0, total = 0;
-        for (int i = 0; i < 8; ++i) {
-            ret = (s.charAt(7 - i) == '1') ? (byte) (1 << i) : 0;
-            total = (byte) (ret | total);
-        }
-        return total;
     }
 }
