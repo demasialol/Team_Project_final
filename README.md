@@ -46,7 +46,7 @@
 
 ## 2-4 카메라 실행<br>
 + 카메라, 앨범 실행<br><br>
-우선 코드의 onCreate에서는 레이아웃을 지정해 주었고 Button이나 ImageView를 참조해 주었습니다. TedPermision()을 이용하여 CameraActivity 최초 실행시 카메라 사용과 저장소 접근에 대한 서용 권한 체크 창을 띄우고 Gallery 버튼과 Camera 버튼 클릭 시 권한이 허락 되어 있다면 각 버튼의 이름에 맞는 함수를 호출하도록 했습니다.
+TedPermision()을 이용하여 CameraActivity 실행시 카메라 사용과 저장소 접근에 대한 서용 권한 체크 창을 띄우고 Gallery 버튼과 Camera 버튼 클릭 시 권한이 허락 되어 있다면 각 버튼의 이름에 맞는 함수를 호출하도록 했습니다.
   <pre><code>
       @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,7 +78,7 @@
         });
     }
 </code></pre><br>
-앨범 버튼 클릭 시 동작하는 이벤트 부터 살펴 보겠습니다. 앨범 버튼 클릭 시 goToAlbum()이라는 함수를 수행하게 되며 함수에서는 이미지의 선택 방법을 확인 할 수 있는 isCamera를 false로 선언해 주고 안드로이드 내에서 제공 하는 앨범의 사진 선택 화면으로 Intent를 전환해 줍니다. 이미지를 선택한 후 선택 분기를 결정하는 인텐트로 전환해 줍니다..
+앨범 버튼 클릭 시 goToAlbum()이라는 함수를 수행하게 되며 함수에서는 이미지의 선택 방법을 확인 할 수 있는 isCamera를 false로 선언해 주고 안드로이드 내에서 제공 하는 앨범의 사진 선택 화면으로 Intent를 전환해 줍니다. 이미지를 선택한 후 선택 분기를 결정하는 인텐트로 전환해 줍니다.
   <pre><code>
   private void goToAlbum() {
         isCamera = false;
@@ -87,7 +87,7 @@
         startActivityForResult(intent, PICK_FROM_ALBUM);
     }
   </pre></code><br>
-카메라 버튼 클릭 시 동작하는 이벤트는 다음과 같이 진행 됩니다. 카메라 버튼 클릭 시 takephoto() 라는 함수를 수행하게 되며 isCamera를 true로 선언하여 Camera로 이미지를 선택했음을 알려주고 안드로이드 에서 제공하는 사진 촬영 인텐트로 전환합니다. 그 다음 createImageFile() 함수를 수행하여 이미지가 담길 임시 파일인 tempfile 만든 다음 FileProvider를 이용하여 tempfile의 uri값을 얻어오고 선택 분기를 결정하는 인텐트로 전환해 줍니다. 
+카메라 버튼 클릭 시 takephoto() 라는 함수를 수행하게 되며 isCamera를 true로 선언하여 Camera로 이미지를 선택했음을 알려주고 안드로이드 에서 제공하는 사진 촬영 인텐트로 전환합니다. 그 다음 createImageFile() 함수를 수행하여 이미지가 담길 임시 파일인 tempfile 만든 다음 FileProvider를 이용하여 tempfile의 uri값을 얻어오고 선택 분기를 결정하는 인텐트로 전환해 줍니다. 
    <pre><code>
    private void takePhoto() {
         isCamera = true;
@@ -113,7 +113,9 @@
         }
     }
    </pre></code><br>
-onActivityResult를 이용하여 선택 분기에 따른 이벤트를 처리해 줍니다. 카메라 혹은 앨범에서 사진 선택 과정중 활동을 취소했을 경우 Toast메시지에 "취소 되었습니다."라는 메시지를 송출하고 tempfile을 삭제 시켜 줍니다. 앨범에서 사진을 선택했을 경우는 우선 이미지의 URI를 얻어온 뒤 Cursor를 이용하여 URI 스키마를 Content:// 에서 File://로 변경한 뒤 이미지뷰에 이미지를 띄우는 Setimage()함수를 선언합니다. 카메라에서 찍은 사진을 선택했을 경우에는 별다른 이벤트를 진행하지 않고 바로 SetImage()함수를 선언합니다.
+onActivityResult를 이용하여 선택 분기에 따른 이벤트를 처리해 줍니다. 카메라 혹은 앨범에서 사진 선택 과정중 활동을 취소했을 경우 Toast메시지를 송출하고 tempfile을 삭제 시켜 줍니다.<br>
+앨범에서 사진을 선택했을 경우는 우선 이미지의 URI를 얻어온 뒤 Cursor를 이용하여 URI 스키마를 Content:// 에서 File://로 변경한 뒤 이미지뷰에 이미지를 띄우는 Setimage()함수를 선언합니다.<BR>
+카메라에서 찍은 사진을 선택했을 경우에는 별다른 이벤트를 진행하지 않고 바로 SetImage()함수를 선언합니다.
    <pre><code>
    if (requestCode == PICK_FROM_ALBUM) {
             Uri photoUri = data.getData();
