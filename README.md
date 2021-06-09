@@ -137,7 +137,7 @@ AlertDialog 기능을 사용해 사용자에 아아디, 즉 이메일 정보를 
                 startActivity(new Intent(getApplicationContext(),Register.class));
             }
         });
-<pre><code>
+</code></pre>
 
 + 회원가입<br>
 
