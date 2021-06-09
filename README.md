@@ -46,38 +46,39 @@
 
 ## 2-4 카메라 실행<br>
 + 카메라, 앨범 실행<br><br>
+
 TedPermision()을 이용하여 CameraActivity 실행시 카메라 사용과 저장소 접근에 대한 서용 권한 체크 창을 띄우고 Gallery 버튼과 Camera 버튼 클릭 시 권한이 허락 되어 있다면 각 버튼의 이름에 맞는 함수를 호출하도록 했습니다.
-  <pre><code>
-      @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_get_image);
+<pre><code>
+    @Override
+  protected void onCreate(@Nullable Bundle savedInstanceState) {
+      super.onCreate(savedInstanceState);
+      setContentView(R.layout.activity_get_image);
 
-        upload = findViewById(R.id.upload);
-        btnCamera= findViewById(R.id.btnCamera);
-        btnGallery = findViewById(R.id.btnGallery);
-        upload.setVisibility(View.INVISIBLE);
+      upload = findViewById(R.id.upload);
+      btnCamera= findViewById(R.id.btnCamera);
+      btnGallery = findViewById(R.id.btnGallery);
+      upload.setVisibility(View.INVISIBLE);
 
-        tedPermission();
+      tedPermission();
 
-        findViewById(R.id.btnGallery).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(isPermission) goToAlbum();
-                else Toast.makeText(view.getContext(), getResources().
-                        getString(R.string.permission_2), Toast.LENGTH_LONG).show();
-            }
-        });
-        findViewById(R.id.btnCamera).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(isPermission)  takePhoto();
-                else Toast.makeText(view.getContext(), getResources().
-                        getString(R.string.permission_2), Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-  </code></pre>
+      findViewById(R.id.btnGallery).setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+              if(isPermission) goToAlbum();
+              else Toast.makeText(view.getContext(), getResources().
+                      getString(R.string.permission_2), Toast.LENGTH_LONG).show();
+          }
+      });
+      findViewById(R.id.btnCamera).setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View view) {
+              if(isPermission)  takePhoto();
+              else Toast.makeText(view.getContext(), getResources().
+                      getString(R.string.permission_2), Toast.LENGTH_LONG).show();
+          }
+      });
+  }
+</code></pre>
 앨범 버튼 클릭 시 goToAlbum()이라는 함수를 수행하게 되며 함수에서는 이미지의 선택 방법을 확인 할 수 있는 isCamera를 false로 선언해 주고 안드로이드 내에서 제공 하는 앨범의 사진 선택 화면으로 Intent를 전환해 줍니다. 이미지를 선택한 후 선택 분기를 결정하는 인텐트로 전환해 줍니다.
   <pre><code>
   private void goToAlbum() {
