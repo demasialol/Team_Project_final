@@ -154,9 +154,9 @@ createImageFile을 통해서 선택한 이미지가 담길 임시 파일을 생�
         Log.d(TAG, "createImageFile : " + image.getAbsolutePath());
         return image;
     }
-  </pre></code><br><br>
-  
+  </pre></code>
 + 이미지 불러오기<br>
+
 tempfile을 사진을 조정하는 ImageResizeUtils 클래스의 resizeFile 함수를 이용하여 크기를 조정하고 비트맵 형식으로 변환하여 ImageView에 표시해 줍니다. 업로드 버튼 클릭시 이미지를 전송하는 Activity로 인텐트를 전환합니다.
 <pre><code>
 private void setImage() {
