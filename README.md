@@ -77,7 +77,7 @@ TedPermision()을 이용하여 CameraActivity 실행시 카메라 사용과 저�
             }
         });
     }
-</code></pre><br>
+  </code></pre>
 앨범 버튼 클릭 시 goToAlbum()이라는 함수를 수행하게 되며 함수에서는 이미지의 선택 방법을 확인 할 수 있는 isCamera를 false로 선언해 주고 안드로이드 내에서 제공 하는 앨범의 사진 선택 화면으로 Intent를 전환해 줍니다. 이미지를 선택한 후 선택 분기를 결정하는 인텐트로 전환해 줍니다.
   <pre><code>
   private void goToAlbum() {
@@ -183,7 +183,6 @@ private void setImage() {
         });
     }
 </pre></code>
-resizeFile 함수에서는 이미지에 대한 크기 조정과 회전 상태 조정등이 이루어 집니다.
 
 ## 2-5 이미지 저장 및 전송<br>
 + 이미지값 변환<br>
