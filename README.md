@@ -449,7 +449,40 @@ public void logout(View view) {
 Realtime Database는 Firebase에서 제공하는 실시간 데이터베이스로 데이터 저장 및 동기화가 실시간으로 가능한 데이터베이스입니다. 이 앱에서는 회원가입한 사용자의 일부 정보를 저장하고, 전송된 이미지를 스트링 값으로 변환하여 저장하는 곳에 사용했습니다.<br><br>
 + 데이터 저장<br>
 1. 회원가입한 사용자의 정보 중 이름과 국가 정보 저장<br>
-  
+각 데이터를 저장하기 위해서 FirebasePost 자바 파일을 만들어 그 안에 필요한 변수들과 함수를 작성해줍니다.<br>
+
+  <pre><code>
+    public String image;
+    public String fullName;
+    public String country;
+    public String senderName;
+
+    public FirebasePost() {
+    }
+
+    public FirebasePost(String image, String fullName, String country, String senderName) {
+        this.image = image;
+        this.fullName = fullName;
+        this.country = country;
+        this.senderName = senderName;
+    }
+       </code></pre>
+       
+toMap 함수는 Realtime Database에 값을 저장하기 위해 HashMap 형식으로 데이터를 넣어줄 함수입니다.<br> 
+처음 회원가입시에는 이미지 전송을 하지 않은 상태이기 때문에 fullName과 country정보만 데이터베이스에 저장되게 됩니다.<br>
+
+<pre><code>
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+        result.put("image",image);
+        result.put("fullName",fullName);
+        result.put("country",country);
+        result.put("senderName",senderName);
+
+        return result;
+    }
+   </code></pre>
+
 2. 이미지 전송시, 이미지를 스트링 값으로 변환하여 저장<br>
 + 데이터 불러오기<br>
 
