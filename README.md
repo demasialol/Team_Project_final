@@ -362,7 +362,9 @@ if (!user.isEmailVerified()) {
         });
 </pre></code>
 
-<br> 로그인 페이지에서와 동일한 패스워드 리셋 기능입니다 <br>
+<br>  패스워드 변경기능입니다 <br>
+<br> 패스워드를 이메일 인증을 통해 완전히 바꾸는것과는 다른 패스워드를 변경하는 기능입니다 <br>
+<br> 사용자가 패스워드 규격에 맞지 않는 정보를 입력하면 에러 메시지를 보여줍니다 <br>
 <pre><code>
  resetPassLocal.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -407,8 +409,35 @@ if (!user.isEmailVerified()) {
         });
        </pre></code>
 
+<br> 마지막으로 메인 액티비티는 다른 화면으로 넘어 갈 수 있도록 하는 각종 버튼들이 존재합니다
+<br> 그러한 버튼들을 이용할 수 있게 해주는 코드들입니다
 
-
+앨범
+<pre><code>
+ ImgList = findViewById(R.id.btnImgList);
+        ImgList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(),imgList.class));
+            }
+        });
+ </pre></code>
+ 로그아웃
+ <pre><code>
+public void logout(View view) {
+        FirebaseAuth.getInstance().signOut();//logout
+        startActivity(new Intent(getApplicationContext(), Login.class));
+        finish();
+    }
+</pre></code>
+옵션메뉴
+<pre><code>
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return true;
+    }
+</pre></code>
 
     
     
