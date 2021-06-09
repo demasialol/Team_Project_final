@@ -299,8 +299,113 @@ AlertDialog 기능을 사용해 사용자에 아아디, 즉 이메일 정보를 
 
 + 메인화면<br>
 
+<br> 메인화면은 사용자가 최종적으로 개인정보 등을 다 입력해 앱 사용을 시작하는 화면입니다
+<br> 메인 화면에서는 사용자가 기입한 정보 프로필, 아이디 등등 변경이 가능합니다 <br>
+위를 구현하기 위해서는 우선 파이어베이스에서 정보를 불러 올 수 있는 코드들이 필요합니다 <br>
+이번 프로젝트에서 활용하지는 않았지만 서버에 저장된 이미지를 불러오는 기능인 picasso 또한 코드로 작성했습니다
+<pre><code>
+ fAuth = FirebaseAuth.getInstance();
+        fStore = FirebaseFirestore.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference();
 
+        StorageReference profileRef = storageReference.child("users/"+fAuth.getCurrentUser().getUid()+"/profile.jpg");
+        profileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Picasso.get().load(uri).into(profileImage);
+            }
+        });
+</pre></code>
 
+<br> 메인 화면에서 가장 중요한 기능중 하나는 이메일 인증입니다. <br>
+사용자는 로그인에 사용되는 이메일을 통해 본인이 맞는지 인증 하는 메일을 받고 링크를 실행하여야 합니다 <br>
+<pre><code>
+if (!user.isEmailVerified()) {
+            verifyMsg.setVisibility(View.VISIBLE);
+            resendCode.setVisibility(View.VISIBLE);
+
+            resendCode.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View v) {
+                    user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(v.getContext(), "Verification Email Has been Sent.", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d("tag", "onFailure: Email not sent " + e.getMessage());
+                        }
+                    });
+                }
+            });
+        }
+</pre></code>
+
+<br> 회원가입에서 기입한 사용자 정보들을 불러오기위한 코드들 입니다 <br>
+<pre><code>
+ DocumentReference documentReference = fStore.collection("users").document(userId);
+        documentReference.addSnapshotListener(this, new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
+                if (documentSnapshot != null && documentSnapshot.exists()) {
+                    phone.setText(documentSnapshot.getString("phone"));
+                    fullName.setText(documentSnapshot.getString("fName"));
+                  email.setText(documentSnapshot.getString("email"));
+                  country.setText(documentSnapshot.getString("country"));
+
+                } else {
+                    Log.d("tag", "onEvent: Document do not exists");
+                }
+            }
+        });
+</pre></code>
+
+<br> 로그인 페이지에서와 동일한 패스워드 리셋 기능입니다 <br>
+<pre><code>
+ resetPassLocal.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final EditText resetPassword = new EditText(v.getContext());
+
+                final AlertDialog.Builder passwordResetDialog = new AlertDialog.Builder(v.getContext());
+                passwordResetDialog.setTitle("Reset Password ?");
+                passwordResetDialog.setMessage("Enter New Password > 8 Characters long.");
+                passwordResetDialog.setView(resetPassword);
+
+                passwordResetDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // extract the email and send reset link
+                        String newPassword = resetPassword.getText().toString();
+                        user.updatePassword(newPassword).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Toast.makeText(MainActivity.this, "Password Reset Successfully.", Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(MainActivity.this, "Password Reset Failed.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                });
+
+                passwordResetDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // close
+                    }
+                });
+
+                passwordResetDialog.create().show();
+
+            }
+        });
+       </pre></code>
 
 
 
