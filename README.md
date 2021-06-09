@@ -516,7 +516,7 @@ toMap 함수는 Realtime Database에 값을 저장하기 위해 HashMap 형식�
 + 마커 클릭<br>
 
 ## 2-4 카메라 실행<br>
-+ 카메라, 앨범 실행<br><br>
+### 카메라, 앨범 실행<br><br>
 
 TedPermision()을 이용하여 CameraActivity 실행시 카메라 사용과 저장소 접근에 대한 서용 권한 체크 창을 띄우고 Gallery 버튼과 Camera 버튼 클릭 시 권한이 허락 되어 있다면 각 버튼의 이름에 맞는 함수를 호출하도록 했습니다.
 <pre><code>
@@ -626,7 +626,7 @@ createImageFile을 통해서 선택한 이미지가 담길 임시 파일을 생�
         return image;
     }
   </pre></code>
-+ 이미지 불러오기<br>
+### 이미지 불러오기<br>
 
 tempfile을 사진을 조정하는 ImageResizeUtils 클래스의 resizeFile 함수를 이용하여 크기를 조정하고 비트맵 형식으로 변환하여 ImageView에 표시해 줍니다. 업로드 버튼 클릭시 이미지를 전송하는 Activity로 인텐트를 전환합니다.
 <pre><code>
@@ -657,7 +657,7 @@ private void setImage() {
 </pre></code>
 
 ## 2-5 이미지 저장 및 전송<br>
-+ 이미지값 변환<br><br>
+### 이미지값 변환<br><br>
 BitmaptoString이라는 함수를 이용해서 비트맵 형식의 파일을 String값으로 전환합니다. 먼저 비트맵 파일을 Byte형식의 행렬에 저장한  그것을 String 값으로 전환해 줍니다.
 <pre><code>
 public static String BitmapToString(Bitmap bitmap) {
