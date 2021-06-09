@@ -86,7 +86,7 @@ TedPermision()을 이용하여 CameraActivity 실행시 카메라 사용과 저�
         intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
         startActivityForResult(intent, PICK_FROM_ALBUM);
     }
-  </pre></code><br>
+  </pre></code>
 카메라 버튼 클릭 시 takephoto() 라는 함수를 수행하게 되며 isCamera를 true로 선언하여 Camera로 이미지를 선택했음을 알려주고 안드로이드 에서 제공하는 사진 촬영 인텐트로 전환합니다. 그 다음 createImageFile() 함수를 수행하여 이미지가 담길 임시 파일인 tempfile 만든 다음 FileProvider를 이용하여 tempfile의 uri값을 얻어오고 선택 분기를 결정하는 인텐트로 전환해 줍니다. 
    <pre><code>
    private void takePhoto() {
@@ -112,8 +112,8 @@ TedPermision()을 이용하여 CameraActivity 실행시 카메라 사용과 저�
             }
         }
     }
-   </pre></code><br>
-onActivityResult를 이용하여 선택 분기에 따른 이벤트를 처리해 줍니다. 카메라 혹은 앨범에서 사진 선택 과정중 활동을 취소했을 경우 Toast메시지를 송출하고 tempfile을 삭제 시켜 줍니다.<br><<Br>
+   </pre></code>
+onActivityResult를 이용하여 선택 분기에 따른 이벤트를 처리해 줍니다. 카메라 혹은 앨범에서 사진 선택 과정중 활동을 취소했을 경우 Toast메시지를 송출하고 tempfile을 삭제 시켜 줍니다.<br><br>
 앨범에서 사진을 선택했을 경우는 우선 이미지의 URI를 얻어온 뒤 Cursor를 이용하여 URI 스키마를 Content:// 에서 File://로 변경한 뒤  이미지를 띄우는 Setimage()함수를 선언합니다.<br><br>
 카메라에서 찍은 사진을 선택했을 경우에는 SetImage()함수를 선언합니다.
    <pre><code>
@@ -183,6 +183,7 @@ private void setImage() {
         });
     }
 </pre></code>
+resizeFile 함수에서는 이미지에 대한 크기 조정과 회전 상태 조정등이 이루어 집니다.
 
 ## 2-5 이미지 저장 및 전송<br>
 + 이미지값 변환<br>
