@@ -110,7 +110,12 @@ Realtime Database는 Firebase에서 제공하는 실시간 데이터베이스로
         this.country = country;
         this.senderName = senderName;
     }
-    
+       </code></pre>
+       
+toMap 함수는 Realtime Database에 값을 저장하기 위해 HashMap 형식으로 데이터를 넣어줄 함수입니다.<br> 
+처음 회원가입시에는 이미지 전송을 하지 않은 상태이기 때문에 fullName과 country정보만 데이터베이스에 저장되게 됩니다.<br>
+
+    <code><pre>
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
         result.put("image",image);
@@ -121,9 +126,7 @@ Realtime Database는 Firebase에서 제공하는 실시간 데이터베이스로
         return result;
     }
    </code></pre>
-    
-toMap 함수는 Realtime Database에 값을 저장하기 위해 HashMap 형식으로 데이터를 넣어줄 함수입니다.<br> 
-처음 회원가입시에는 이미지 전송을 하지 않은 상태이기 때문에 fullName과 country정보만 데이터베이스에 저장되게 됩니다.
+
 2. 이미지 전송시, 이미지를 스트링 값으로 변환하여 저장<br>
 + 데이터 불러오기<br>
 
