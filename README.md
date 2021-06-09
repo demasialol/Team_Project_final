@@ -109,7 +109,9 @@ Realtime Database는 Firebase에서 제공하는 실시간 데이터베이스로
         this.senderName = senderName;
     }
     </code></pre>
+    
     각 데이터를 저장하기 위해서 FirebasePost 자바 파일을 만들어 그 안에 필요한 변수들과 함수를 작성해줍니다.
+    
     <pre><code>
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
@@ -121,6 +123,7 @@ Realtime Database는 Firebase에서 제공하는 실시간 데이터베이스로
         return result;
     }
     </code></pre>
+    
     toMap 함수는 Realtime Database에 값을 저장하기 위해 HashMap 형식으로 데이터를 넣어줄 함수입니다.<br>
     처음 회원가입시에는 이미지 전송을 하지 않은 상태이기 때문에 fullName과 country정보만 데이터베이스에 저장되게 됩니다.
 2. 이미지 전송시, 이미지를 스트링 값으로 변환하여 저장<br>
