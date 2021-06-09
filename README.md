@@ -482,7 +482,26 @@ toMap 함수는 Realtime Database에 값을 저장하기 위해 HashMap 형식�
         return result;
     }
    </code></pre>
+   
+회원가입을 하면 정보들이 데이터베이스에 저장되도록 회원가입 버튼에 onClick리스너 안에 데이터 저장 코드를 작성해줍니다.<br>
+<pre><code>
+   fDatabase = FirebaseDatabase.getInstance();
+   DatabaseReference reference = fDatabase.getReference();
 
+   Map<String, Object> childUpdates=new HashMap<>();
+   Map<String, Object> postValues=null;
+   </code></pre>
+
+필요한 변수를 선언해주고 FirebasePost 클래스에 작성해놓은 toMap함수를 이용하여 데이터베이스에 데이터를 저장해줍니다.<br>
+
+<pre><code>
+   com.androidapp.youjigom.FirebasePost post=new com.androidapp.youjigom.FirebasePost(image, fullName, country,senderName);
+   postValues=post.toMap();
+
+   childUpdates.put("/users/"+fullName,postValues);
+   reference.updateChildren(childUpdates);
+   </code></pre>
+   
 2. 이미지 전송시, 이미지를 스트링 값으로 변환하여 저장<br>
 + 데이터 불러오기<br>
 
