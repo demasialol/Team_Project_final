@@ -5,8 +5,9 @@
 ## 2. 기능구현
 ### 2-1 파이어베이스<br>
 + 소개<br>
-+ 회원가입<br>
 + 로그인<br>
++ 회원가입<br>
++ 메인화면<br>
 ### 2-2 리얼타임 데이터베이스<br>
 + 소개<br>
 + 데이터 저장<br>
@@ -32,13 +33,14 @@
 
 # 2. 기능구현<br>
 ## 2-1 파이어베이스<br>
-  + 소개<br>
+    + 소개<br>
   
 Firebase 에서 제공하는 서비스를 이용해 사용자를 식별할수 있는 ID / Passwrod 생성과 앱 활용에 필요한
-각종 데이터들을 저장하기 위한 기능을 하는 파트 입니다<br> 
+각종 데이터들을 저장하기 위한 기능을 하는 파트 입니다<br>
+
 사용자는 로그인 / 레지스터 / 메인 화면 3 가지 화면을 활용 합니다 <br>
 
-
+    + 로그인<br>
 <br> 먼저 로그인 화면입니다 <br> 사용자는 로그인 화면에서 토스트 메시지를 참고해 규격에 맞지 않는 
 ID / PW 작성을 인지할수 있습니다<br>
 <pre><code> 
@@ -66,7 +68,7 @@ ID / PW 작성을 인지할수 있습니다<br>
     </code></pre> 
     
 <br> 아래는 로그인 화면에서 가장 중요한 파이어 베이스에서 정보를 불러오는 코드입니다 <br>
-
+fAuth.signInWithEmailAndPassword(email,password) 코드를 통해 이메일과 패스워드를 인증합니다 <br>
 
 <pre><code> 
                 fAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -82,7 +84,227 @@ ID / PW 작성을 인지할수 있습니다<br>
 
                     }
                 });
-               </code></pre> 
+               </code></pre>
+
+<br> 로그인 화면에서는 사용자가 비밀번호를 분실했을때 비밀번호를 다시 세팅 할 수 있는 서비스도 제공합니다 <br>
+AlertDialog 기능을 사용해 사용자에 아아디, 즉 이메일 정보를 받아 해당 이메일에 패스워드 리셋 링크를 전송합니다 <br>
+이때 전송에 실패 하거나 등록되지 않은 이메일을 작성했으면 Failure 메시지를 확인 할 수 있게 구현했습니다<br>
+<pre><code>
+
+       forgotTextLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                final EditText resetMail = new EditText(v.getContext());
+                final AlertDialog.Builder passwordResetDialog = new AlertDialog.Builder(v.getContext());
+                passwordResetDialog.setTitle("Reset Password ?");
+                passwordResetDialog.setMessage("Enter Your Email To Received Reset Link.");
+                passwordResetDialog.setView(resetMail);
+
+                passwordResetDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                            // extract the email and send reset link
+                        String mail = resetMail.getText().toString();
+                        fAuth.sendPasswordResetEmail(mail).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Toast.makeText(Login.this, "Reset Link Sent To Your Email.", Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(Login.this, "Error ! Reset Link is Not Sent" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                    }
+                });
+
+                passwordResetDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // close the dialog
+                    }
+                });
+</code></pre>
+
+마지막으로 로그인 페이지에서 회원가입(register) 로 넘어가기위한 버튼 입니다
+<pre><code>
+ mCreateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(),Register.class));
+            }
+        });
+<pre><code>
+
++ 회원가입<br>
+
+<br> 회원가입 페이지에서는 사용자에게 5가지 종류의 데이터를 작성받습니다. 이름, 이메일, 비밀번호, 전화번호, 국적 입니다 <br>
+앱은 사용자의 정보를 받아 로그인 인증, 앱 내 서비스 이용에 해당 유저의 데이터를 활용합니다 <br>
+
+<br>아래는 사용자의 데이터를 인식해 파이어베이스에 저장을 하기 위한 코드 입니다
+
+<pre><code>
+  Toast.maeText(Register.this, "User Created.", Toast.LENGTH_SHORT).show();
+                            userID = fAuth.getCurrentUser().getUid();
+                            DocumentReference documentReference = fStore.collection("users").document(userID);
+                            Map<String,Object> user = new HashMap<>();
+                            user.put("fName",fullName);
+                            user.put("email",email);
+                            user.put("phone",phone);
+                            user.put("country",country);
+                            documentReference.set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d(TAG, "onSuccess: user Profile is created for "+ userID);
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d(TAG, "onFailure: " + e.toString());
+                                }
+                            });
+  fDatabase = FirebaseDatabase.getInstance();
+
+                            DatabaseReference reference = fDatabase.getReference();
+
+                            Map<String, Object> childUpdates=new HashMap<>();
+
+                            Map<String, Object> postValues=null;
+
+                            com.androidapp.youjigom.FirebasePost post=new com.androidapp.youjigom.FirebasePost(image, fullName, country,senderName);
+                            postValues=post.toMap();
+
+                            setSenderName(fullName);
+
+                            childUpdates.put("/users/"+fullName,postValues);
+                            reference.updateChildren(childUpdates);
+
+                            startActivity(new Intent(getApplicationContext(),MainActivity.class));
+
+                        }else {
+                            Toast.makeText(Register.this, "Error ! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.GONE);
+                        }
+                    }
+                });
+            }
+        });
+
+
+</pre></code>
+
+<br> 로그인 화면에서와 마찬가지로 사용자가 잘못된 정보를 기입할 수도 있기 때문에 잘못된 정보 작성에 대한 정보 또한 제공합니다 <br>
+<pre><code>
+ mRegisterBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final String email = mEmail.getText().toString().trim();
+                String password = mPassword.getText().toString().trim();
+                final String fullName = mFullName.getText().toString();
+                final String phone    = mPhone.getText().toString();
+                final String country = mCountry.getText().toString().toString();
+
+                if(TextUtils.isEmpty(email)){
+                    mEmail.setError("Email is Required.");
+                    return;
+                }
+                if(TextUtils.isEmpty(password)){
+                    mPassword.setError("Password is Required.");
+                    return;
+                }
+                if(password.length() < 6){
+                    mPassword.setError("Password Must be >= 6 Characters");
+                    return;
+                }
+                if(TextUtils.isEmpty(country)){
+                    mCountry.setError("Country information is required");
+                    return;
+                }
+                progressBar.setVisibility(View.VISIBLE);
+</pre></code>
+
+<br> 사용자가 정보를 작성 할 때, 국적(country) 값은 정해진 답변에서만 선택 해야 합니다 <br>
+주어진 옵션에서만 선택 할 수 있도록 AlertDialog 시스템을 구현헀습니다<br>
+
+<pre><code>
+ final int[] selectedItem = {0};
+
+        choose = (Button) findViewById(R.id.choose);
+        choose.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                final String[] items = new String[]{
+                        "미국",//0
+                        "영국",//1
+                        "프랑스",//2
+                        "남아프리카공화국",//3
+                        "이탈리아",//4
+                        "사우디아라비아",//5
+                        "인도",//6
+                        "러시아",//7
+                        "멕시코",//8
+                        "브라질",//9
+                        "아르헨티나",//10
+                        "태국",//11
+                        "중국",//12
+                        "일본",//13
+                        "대한민국"};//14
+                AlertDialog.Builder dialog = new AlertDialog.Builder(Register.this);
+                dialog.setTitle("Choose your country")
+                        .setSingleChoiceItems(items, 0, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                selectedItem[0] = which;
+                                mCountry.setText(items[selectedItem[0]]);
+
+                            }
+                        })
+                        .setPositiveButton("confirm", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                Toast.makeText(Register.this
+                                        ,items[selectedItem[0]]
+                                        ,Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .setNeutralButton("back", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(Register.this
+                                        ,"Canceled"
+                                        ,Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                dialog.create();
+                dialog.show();
+
+            }
+        });
+</pre></code>
+
+<br> 마지막으로 로그인 화면에 다시 돌아갈 수 있도록 해주는 버튼 입니다 <br>
+<pre><code>
+        mLoginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(),Login.class));
+            }
+        });
+
+</pre></code>
+
++ 메인화면<br>
+
+
+
+
+
+
+
     
     
 
