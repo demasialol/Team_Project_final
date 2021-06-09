@@ -36,7 +36,6 @@
 
 ## 2-2 리얼타임 데이터베이스
 + 소개<br>
-  Realtime Database는 Firebase에서 제공하는 실시간 데이터베이스로 데이터 저장 및 동기화가 실시간으로 가능한 데이터베이스입니다. 이 앱에서는 회원가입한 사용자의 일부 정보를 저장하고, 전송된 이미지를 스트링 값으로 변환하여 저장할 때 사용했습니다.
 + 데이터 저장<br>
 + 데이터 불러오기<br>
 
@@ -114,9 +113,9 @@ TedPermision()을 이용하여 CameraActivity 실행시 카메라 사용과 저�
         }
     }
    </pre></code><br>
-onActivityResult를 이용하여 선택 분기에 따른 이벤트를 처리해 줍니다. 카메라 혹은 앨범에서 사진 선택 과정중 활동을 취소했을 경우 Toast메시지를 송출하고 tempfile을 삭제 시켜 줍니다.<br>
-앨범에서 사진을 선택했을 경우는 우선 이미지의 URI를 얻어온 뒤 Cursor를 이용하여 URI 스키마를 Content:// 에서 File://로 변경한 뒤 이미지뷰에 이미지를 띄우는 Setimage()함수를 선언합니다.<BR>
-카메라에서 찍은 사진을 선택했을 경우에는 별다른 이벤트를 진행하지 않고 바로 SetImage()함수를 선언합니다.
+onActivityResult를 이용하여 선택 분기에 따른 이벤트를 처리해 줍니다. 카메라 혹은 앨범에서 사진 선택 과정중 활동을 취소했을 경우 Toast메시지를 송출하고 tempfile을 삭제 시켜 줍니다.<br><<Br>
+앨범에서 사진을 선택했을 경우는 우선 이미지의 URI를 얻어온 뒤 Cursor를 이용하여 URI 스키마를 Content:// 에서 File://로 변경한 뒤  이미지를 띄우는 Setimage()함수를 선언합니다.<br><br>
+카메라에서 찍은 사진을 선택했을 경우에는 SetImage()함수를 선언합니다.
    <pre><code>
    if (requestCode == PICK_FROM_ALBUM) {
             Uri photoUri = data.getData();
@@ -143,8 +142,47 @@ onActivityResult를 이용하여 선택 분기에 따른 이벤트를 처리해 
         }
     }
   </pre></code>
+createImageFile을 통해서 선택한 이미지가 담길 임시 파일을 생성합니다 파일의 이름은 중복을 피하기 위해서 해당 활동을 시작한 시간으로 지정합니다.
+  <pre><code>
+  private File createImageFile() throws IOException {
+        String timeStamp = new SimpleDateFormat("HHmmss").format(new Date());
+        String imageFileName = "KNLBDC_" + timeStamp + "_";
+        File storageDir = new File(Environment.getExternalStorageDirectory() + "/KNLBDC/");
+        if (!storageDir.exists()) storageDir.mkdirs();
+        File image = File.createTempFile(imageFileName, ".jpg", storageDir);
+        Log.d(TAG, "createImageFile : " + image.getAbsolutePath());
+        return image;
+    }
+  </pre></code><br><br>
   
 + 이미지 불러오기<br>
+tempfile을 사진을 조정하는 ImageResizeUtils 클래스의 resizeFile 함수를 이용하여 크기를 조정하고 비트맵 형식으로 변환하여 ImageView에 표시해 줍니다. 업로드 버튼 클릭시 이미지를 전송하는 Activity로 인텐트를 전환합니다.
+<pre><code>
+private void setImage() {
+        imageView = findViewById(R.id.imageView);
+        ImageResizeUtils.resizeFile(tempFile, tempFile, 1280, isCamera);
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        Bitmap originalBm = BitmapFactory.decodeFile(tempFile.getAbsolutePath(), options);
+        Log.d(TAG, "setImage : " + tempFile.getAbsolutePath());
+
+        imageView.setImageBitmap(originalBm);
+        StringImage=BitmapToString(originalBm);
+        setoriginalBm(StringImage);
+
+        upload.setVisibility(View.VISIBLE);
+        btnCamera.setVisibility(View.INVISIBLE);
+        btnGallery.setVisibility(View.INVISIBLE);
+
+        findViewById(R.id.upload).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //업로드 버튼 클릭 시 MapsActivity로 화면 전환
+                startActivity(new Intent(getApplicationContext(),MapsActivity.class));
+            }
+        });
+    }
+</pre></code>
 
 ## 2-5 이미지 저장 및 전송<br>
 + 이미지값 변환<br>
