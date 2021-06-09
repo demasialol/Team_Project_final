@@ -6,6 +6,7 @@
 ### 2-1 파이어베이스<br>
 + 소개<br>
 + 회원가입<br>
++ 로그인<br>
 ### 2-2 리얼타임 데이터베이스<br>
 + 소개<br>
 + 데이터 저장<br>
@@ -32,6 +33,59 @@
 # 2. 기능구현<br>
 ## 2-1 파이어베이스<br>
   + 소개<br>
+  
+Firebase 에서 제공하는 서비스를 이용해 사용자를 식별할수 있는 ID / Passwrod 생성과 앱 활용에 필요한
+각종 데이터들을 저장하기 위한 기능을 하는 파트 입니다<br> 
+사용자는 로그인 / 레지스터 / 메인 화면 3 가지 화면을 활용 합니다 <br>
+
+
+<br> 먼저 로그인 화면입니다 <br> 사용자는 로그인 화면에서 토스트 메시지를 참고해 규격에 맞지 않는 
+ID / PW 작성을 인지할수 있습니다<br>
+<pre><code> 
+  mLoginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String email = mEmail.getText().toString().trim(); // 사용자 이메일 인식
+                String password = mPassword.getText().toString().trim();// 사용자 패스워드 인식
+
+                if(TextUtils.isEmpty(email)){
+                    mEmail.setError("Email is Required."); //이메일 작성칸에 이메일을 적지 않았을시 나오는 메시지
+                    return;
+                }
+
+                if(TextUtils.isEmpty(password)){
+                    mPassword.setError("Password is Required."); //패스워드 작성칸에 패스워드를 적지 않았을시 나오는 메시지
+                    return;
+                }
+
+                if(password.length() < 8){
+                    mPassword.setError("Password Must be >= 8 Characters"); //패스워드가 8자리 이상이 아닐시 나오는 메시지
+                    return;
+                }
+    </code></pre> 
+    
+<br> 아래는 로그인 화면에서 가장 중요한 파이어 베이스에서 정보를 불러오는 코드입니다 <br>
+
+
+<pre><code> 
+                fAuth.signInWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()){
+                            Toast.makeText(Login.this, "Logged in Successfully", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getApplicationContext(),MapsActivity.class));
+                        }else {
+                            Toast.makeText(Login.this, "Error ! " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.GONE);
+                        }
+
+                    }
+                });
+               </code></pre> 
+    
+    
+
   + 회원가입<br>
 
 ## 2-2 리얼타임 데이터베이스
