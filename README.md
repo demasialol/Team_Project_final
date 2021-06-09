@@ -186,7 +186,18 @@ private void setImage() {
 </pre></code>
 
 ## 2-5 이미지 저장 및 전송<br>
-+ 이미지값 변환<br>
++ 이미지값 변환<br><br>
+BitmaptoString이라는 함수를 이용해서 비트맵 형식의 파일을 String값으로 전환합니다. 먼저 비트맵 파일을 Byte형식의 행렬에 저장한  그것을 String 값으로 전환해 줍니다.
+<pre><code>
+public static String BitmapToString(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 70, baos);
+        byte[] bytes = baos.toByteArray();
+        String temp = Base64.encodeToString(bytes, Base64.DEFAULT);
+        return temp;
+    }
+</pre></code>
+
 + 이미지값 데이터 베이스에 저장<br>
 
 ## 2-6 환경설정<br>
