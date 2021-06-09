@@ -34,7 +34,7 @@
 # 2. 기능구현<br>
 ## 2-1 파이어베이스<br>
 ### (1) 소개
-  
+<img src="https://github.com/demasialol/Team_Project_HW/blob/master/social.png?raw=true" align="left" height="200">  
 Firebase 에서 제공하는 서비스를 이용해 사용자를 식별할수 있는 ID / Passwrod 생성과 앱 활용에 필요한
 각종 데이터들을 저장하기 위한 기능을 하는 파트 입니다<br>
 
@@ -509,7 +509,6 @@ toMap 함수는 Realtime Database에 값을 저장하기 위해 HashMap 형식�
 <img src="https://user-images.githubusercontent.com/79952145/121284733-48a36d00-c918-11eb-98b1-0755e825b56a.png">
 
 <b>2. 이미지 전송시, 이미지를 스트링 값으로 변환하여 저장<br></b>
-아아
 + 데이터 불러오기<br>
 
 ## 2-3 구글맵<br>
